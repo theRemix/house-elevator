@@ -4,7 +4,10 @@
   "description": "a devleague exercise",
   "main": "elevator.js",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "play": "^0.5.0",
+    "readline-sync": "^0.4.8"
+  },
   "devDependencies": {
     "chai": "^1.9.1",
     "gulp": "^3.8.5",

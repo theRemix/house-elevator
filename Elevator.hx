@@ -11,5 +11,9 @@ class Elevator
   {
     this.floor = floor;
     trace('going to floor $floor');
+    House.play(floor, function():Void
+    {
+      
+    });
   }
 }

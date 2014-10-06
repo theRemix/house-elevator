@@ -5,6 +5,8 @@ Elevator.prototype = {
 	'goto': function(floor) {
 		this.floor = floor;
 		console.log("going to floor " + floor);
+		House.play(floor,function() {
+		});
 	}
 };
 var HxOverrides = function() { };
@@ -100,11 +102,16 @@ js.Node.get_json = function() {
 js.Node.newSocket = function(options) {
 	return new js.Node.net.Socket(options);
 };
+var House = function() { };
+House.play = function(floors,done) {
+	if(floors > 5) floors = 5; else if(floors < 1) floors = 1;
+	House.player.sound("./bin/" + floors + "floors.wav",done);
+};
 var Main = function() {
 	var elevator = new Elevator();
 	var in_house = true;
 	while(in_house) {
-		var result = Main.readlineSync.question("What floor sir?");
+		var result = Main.readlineSync.question("What floor sir? ");
 		if(Std.parseInt(result) != null) elevator["goto"](Std.parseInt(result)); else if(result == "q" || result == "exit" || result == "bye") in_house = false;
 	}
 };
@@ -245,6 +252,7 @@ if(version[0] > 0 || version[1] >= 9) {
 	js.Node.setImmediate = setImmediate;
 	js.Node.clearImmediate = clearImmediate;
 }
+House.player = js.Node.require("play");
 Main.readlineSync = js.Node.require("readline-sync");
 js.NodeC.UTF8 = "utf8";
 js.NodeC.ASCII = "ascii";
