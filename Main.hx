@@ -9,6 +9,7 @@ class Main
   public var elevator:Elevator;
   public var prompt:String;
   public var timer:Timer;
+  public var spinnerState:Int;
   public function new()
   {
     Node.console.log("HOUSE ELEVATOR!!!!!");
@@ -22,18 +23,18 @@ class Main
   public function ready():Void
   {
     var result = readlineSync.question( prompt );
-    
+
     if(prompt != PROMPT) prompt = PROMPT;
 
     if( StringTools.startsWith(result, "+") ){ // stuff that should be in Elevator
-      
+
       var floors = Std.parseInt( result.substr(1) );
       if( floors != null ){
         elevator.travelto(floors);
       }
 
     }else if( StringTools.startsWith(result, "-") ){
-      
+
       var floors = Std.parseInt( result );
       if( floors != null ){
         elevator.travelto(floors);
@@ -53,10 +54,42 @@ class Main
     }
   }
 
+  private function spinner():String
+  {
+    var spinnerString:String = '\r';
+    if (spinnerState > 6) {
+      spinnerState = 0;
+    }
+    switch (spinnerState) {
+      case 0:
+        spinnerString += '-';
+      case 1:
+        spinnerString += '\\';
+      case 2:
+        spinnerString += '/';
+      case 3:
+        spinnerString += '-';
+      case 4:
+        spinnerString += '|';
+      case 5:
+        spinnerString += '\\';
+      case 6:
+        spinnerString += '/';
+      default:
+        spinnerString += '-';
+        spinnerState = -1;
+    }
+    spinnerState += 1;
+
+    return spinnerString;
+  }
+
   // pretend blocking execution, wait for elevator to "arrive"
   public function checkReady():Void
   {
+    Node.process.stdout.write(spinner());
     if(!elevator.isTravelling){
+      Node.process.stdout.write('\r');
       ready();
     }
   }
